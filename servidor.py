@@ -23,6 +23,24 @@ class Chat(chat_pb2_grpc.ChatServicer):
         print('Mensagem recebida! Dono:{}, Conteúdo:{}'.format(request.dono, request.conteudo))
         self.mensagens.append(request)
         return chat_pb2.Retorno()
+    
+    def EnviaCredencial(self, request, context):
+        linhas = []
+        try:
+            arquivo = open('dicio')
+            linhas = arquivo.readlines()
+        except:
+            print('arquivo nao existe')
+        finally:
+            arquivo = open('dicio', 'w')
+            for l in linhas:
+                arquivo.write(l)
+            arquivo.write('{}:{}:{}\n'.format(request.nome, request.servidor, request.porta))
+            arquivo.close()
+        
+        return chat_pb2.Retorno()
+    
+
 
 
 def start_servidor():

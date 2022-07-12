@@ -24,6 +24,11 @@ class ChatStub(object):
                 request_serializer=chat__pb2.Mensagem.SerializeToString,
                 response_deserializer=chat__pb2.Retorno.FromString,
                 )
+        self.EnviaCredencial = channel.unary_unary(
+                '/Chat/EnviaCredencial',
+                request_serializer=chat__pb2.Credencial.SerializeToString,
+                response_deserializer=chat__pb2.Retorno.FromString,
+                )
 
 
 class ChatServicer(object):
@@ -41,6 +46,12 @@ class ChatServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def EnviaCredencial(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ChatServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -52,6 +63,11 @@ def add_ChatServicer_to_server(servicer, server):
             'EnviaMensagem': grpc.unary_unary_rpc_method_handler(
                     servicer.EnviaMensagem,
                     request_deserializer=chat__pb2.Mensagem.FromString,
+                    response_serializer=chat__pb2.Retorno.SerializeToString,
+            ),
+            'EnviaCredencial': grpc.unary_unary_rpc_method_handler(
+                    servicer.EnviaCredencial,
+                    request_deserializer=chat__pb2.Credencial.FromString,
                     response_serializer=chat__pb2.Retorno.SerializeToString,
             ),
     }
@@ -94,6 +110,23 @@ class Chat(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Chat/EnviaMensagem',
             chat__pb2.Mensagem.SerializeToString,
+            chat__pb2.Retorno.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def EnviaCredencial(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Chat/EnviaCredencial',
+            chat__pb2.Credencial.SerializeToString,
             chat__pb2.Retorno.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
